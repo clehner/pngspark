@@ -1,0 +1,9 @@
+{
+	"name": "pngspark",
+	"version": "0.0.1",
+	"repo": "clehner/pngspark",
+	"description": "sparkline PNG images",
+	"keywords": ["spark", "chart", "stats", "sparkline", "image", "png"],
+	"license": "MIT",
+	"install": "make install"
+}
