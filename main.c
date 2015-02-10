@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	for (int i = 1; i < argc; i++) {
 		if (argv[i][0] != '-') continue;
 		if (argv[i][1] == '-') {
-			if (strcmp("help", argv[i]+2)) {
+			if (!strcmp("help", argv[i]+2)) {
 				errx(1, "Usage: %s [--help] [-h height] "
 						"[-o output.png] [-c color]", argv[0]);
 			}

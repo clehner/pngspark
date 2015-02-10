@@ -42,37 +42,33 @@ int pngspark_append(struct pngspark *ps, double value)
 	return 0;
 }
 
-int pngspark_draw(struct pngspark *ps, uint32_t *data, size_t width,
-		size_t height)
-{
-	double *values = ps->values;
-	uint32_t color = ps->color;
-	double height_scale = (double)height / (double)ps->max_value;
-	for (size_t x = 0; x < width; x++) {
-		size_t value = values[x] * height_scale;
-		for (size_t y = 0; y < value; y++)
-			data[x + width * y] = 0;
-		for (size_t y = value; y <= height; y++)
-			data[x + width * y] = color;
-	}
-	return 0;
-}
-
 static size_t write_fd(const void *ptr, size_t size, size_t count,
 		void *userPtr)
 {
-    return fwrite(ptr, size, count, (FILE *)userPtr);
+	return fwrite(ptr, size, count, (FILE *)userPtr);
 }
 
 int pngspark_write(struct pngspark *ps, FILE *file)
 {
-    LuImage *img = luImageCreate(ps->num_values, ps->max_value+1, 4, 8);
+	size_t height = ps->height;
+	size_t width = ps->num_values;
+	LuImage *img = luImageCreate(ps->num_values, ps->height, 4, 8);
 	if (!img) return 1;
 
-	int ret = pngspark_draw(ps, (uint32_t *)img->data, ps->num_values,
-			ps->max_value);
-	if (!ret)
-		ret = luPngWrite(write_fd, file, img);
+	double *values = ps->values;
+	uint32_t *pixels = (uint32_t *)img->data;
+	uint32_t color = ps->color;
+	double height_scale = (double)height / (double)ps->max_value;
+
+	for (size_t x = 0; x < width; x++) {
+		size_t value = height - (values[x] * height_scale);
+		for (size_t y = 0; y < value; y++)
+			pixels[x + width * y] = 0;
+		for (size_t y = value; y < height; y++)
+			pixels[x + width * y] = color;
+	}
+
+	int ret = luPngWrite(write_fd, file, img);
 	luImageRelease(img);
 	return ret;
 }
