@@ -8,9 +8,13 @@
 
 static const size_t initial_size = 8;
 
-uint32_t parse_color(const char *color)
+uint32_t parse_color(const char *color_str)
 {
-	return !strcmp("black", color) ? 0xff000000 : 0xff999989;
+	if (!color_str) return 0;
+	if (color_str[0] == '#') color_str++;
+	uint32_t color = strtol(color_str, NULL, 16);
+	return 0xff000000 |
+		((color >> 16) | (color & 0x00ff00) | (color & 0xff) << 16);
 }
 
 int pngspark_init(struct pngspark *ps, size_t height, const char *color)
@@ -64,7 +68,6 @@ int pngspark_write(struct pngspark *ps, FILE *file)
 {
     LuImage *img = luImageCreate(ps->num_values, ps->max_value+1, 4, 8);
 	if (!img) return 1;
-	printf("size: %zu\n", img->dataSize);
 
 	int ret = pngspark_draw(ps, (uint32_t *)img->data, ps->num_values,
 			ps->max_value);
