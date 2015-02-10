@@ -40,6 +40,8 @@ seq 1 720 | awk '{print sin($1/30)}' | ./pngspark -o sine.png -h 30 -c 33c011
 
 Generate pngsparks in your own C programs!
 
+All int methods return 0 on success and nonzero on failure.
+
 ```c
 struct pngspark;
 ```
@@ -61,9 +63,9 @@ int pngspark_write(struct pngspark *ps, FILE *file);
 Process the values and write as a PNG to a file.
 
 ```c
-int pngspark_end(struct pngspark *ps);
+void pngspark_end(struct pngspark *ps);
 ```
-Release allocated memory for the pngspark. (Does not free `ps`, however).
+Release allocated memory for the values of the pngspark. (Does not free `ps`, however).
 
 ## License
 

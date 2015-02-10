@@ -17,6 +17,6 @@ struct pngspark {
 int pngspark_init(struct pngspark *, size_t, const char *, double);
 int pngspark_append(struct pngspark *, double);
 int pngspark_write(struct pngspark *, FILE *);
-int pngspark_end(struct pngspark *);
+void pngspark_end(struct pngspark *);
 
 #endif /* __PNGSPARK_H */

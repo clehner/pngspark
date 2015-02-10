@@ -79,9 +79,8 @@ int pngspark_write(struct pngspark *ps, FILE *file)
 	return ret;
 }
 
-int pngspark_end(struct pngspark *ps)
+void pngspark_end(struct pngspark *ps)
 {
 	free(ps->values);
-	return 0;
 }
 

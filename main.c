@@ -80,8 +80,7 @@ int main(int argc, char *argv[])
 	if (pngspark_write(&ps, file) < 0)
 		return 1;
 
-	if (pngspark_end(&ps) < 0)
-		return 1;
+	pngspark_end(&ps);
 
 	if (fclose(file) < 0)
 		err(1, "close %s", filename);
