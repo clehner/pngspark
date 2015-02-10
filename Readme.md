@@ -1,6 +1,5 @@
 # pngspark
-
-[Sparklines](https://github.com/holman/spark) as PNGs.
+### [Sparklines](https://github.com/holman/spark) as PNGs
 
 ## Install
 ```
@@ -46,6 +45,6 @@ int pngspark_end(struct pngspark *ps);
 ```
 Release allocated memory for the pngspark. (Does not free `ps`, however).
 
-# License
+## License
 
 MIT

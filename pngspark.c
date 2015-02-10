@@ -63,7 +63,6 @@ int pngspark_write(struct pngspark *ps, FILE *file)
 
 	double *values = ps->values;
 	uint32_t *pixels = (uint32_t *)img->data;
-	uint32_t color = ps->color;
 	ps->min_value *= ps->scaling;
 	double height_scale = (double)height / (ps->max_value - ps->min_value);
 
@@ -72,7 +71,7 @@ int pngspark_write(struct pngspark *ps, FILE *file)
 		for (size_t y = 0; y < value; y++)
 			pixels[x + width * y] = 0;
 		for (size_t y = value; y < height; y++)
-			pixels[x + width * y] = color;
+			pixels[x + width * y] = ps->color;
 	}
 
 	int ret = luPngWrite(write_fd, file, img);

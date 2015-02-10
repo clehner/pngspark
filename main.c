@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	const char *color = "#000000";
 	const char *filename = NULL;
 	double scaling = 0.8;
-	int height = 10;
+	int height = 80;
 
 	for (int i = 1; i < argc; i++) {
 		if (argv[i][0] != '-') {
