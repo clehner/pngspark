@@ -14,27 +14,32 @@ char float_chars[(unsigned char)-1] = {
 	['.'] = 1, ['-'] = 1, ['e'] = 1, ['E'] = 1, 0
 };
 
+void usage(const char *progname)
+{
+	errx(1, "Usage: %s output.png [-h height] "
+			"[-c color] [-s scaling]", progname);
+}
+
 int main(int argc, char *argv[])
 {
 	struct pngspark ps;
 	const char *color = "#000000";
-	const char *filename = "pngspark.png";
+	const char *filename = NULL;
 	double scaling = 0.8;
 	int height = 10;
 
 	for (int i = 1; i < argc; i++) {
-		if (argv[i][0] != '-') continue;
-		if (argv[i][1] == '-') {
-			if (!strcmp("help", argv[i]+2)) {
-				errx(1, "Usage: %s [--help] [-h height] "
-						"[-o output.png] [-c color] [-s scale_min]", argv[0]);
+		if (argv[i][0] != '-') {
+			if (filename) {
+				usage(argv[0]);
+			} else {
+				filename = argv[i];
 			}
-		} else if (!argv[i][2]) switch (argv[i][1]) {
+		} else if (argv[i][2]) {
+			errx(1, "extra argument: %s", argv[i]);
+		} else switch (argv[i][1]) {
 			case 'c':
 				if (++i < argc) color = argv[i];
-				break;
-			case 'o':
-				if (++i < argc) filename = argv[i];
 				break;
 			case 'h':
 				if (++i < argc) height = atoi(argv[i]);
@@ -43,6 +48,10 @@ int main(int argc, char *argv[])
 				if (++i < argc) scaling = atof(argv[i]);
 				break;
 		}
+	}
+
+	if (!filename) {
+		usage(argv[0]);
 	}
 
 	FILE *file = fopen(filename, "w");
