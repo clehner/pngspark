@@ -3,6 +3,8 @@
 
 ![histogram](https://cloud.githubusercontent.com/assets/95347/6131872/f78ab708-b11c-11e4-9ae2-fd6cd0ec2b76.png)
 
+Uses [LuPng](https://github.com/jansol/LuPng).
+
 ## Install
 ```
 make
@@ -11,15 +13,14 @@ make
 
 ## Usage
 ```
-pngspark [-h height] [-c color] [-s scaling] output.png
+echo 1 2 3 ... | pngspark [-h height] [-c color] [-s scaling] output.png
 ```
-Pipe numbers to pngspark to add them to the image.
 
 ### Options
 * `-h height`: the height of the image in pixels
 * `-c color`: the color of the foreground, as #rrggbb hex
-* `-s scaling`: scaling factor. 0 to do no scaling, 1 to make the minimum
-  value be at the bottom of the image
+* `-s scaling`: scaling factor. 0 to keep things proportional, 1 to make the
+  minimum value be at the bottom of the image
 
 ## Examples
 
@@ -37,6 +38,8 @@ seq 1 720 | awk '{print sin($1/30)}' | ./pngspark -o sine.png -h 30 -c 33c011
 
 ## API
 
+Generate pngsparks in your own C programs!
+
 ```c
 struct pngspark;
 ```
@@ -45,10 +48,10 @@ A png spark instance: collection of values and settings.
 ```c
 int pngspark_init(struct pngspark *ps, size_t height, const char *color, double scaling);
 ```
-Initialize a pngspark struct.
+Initialize a pngspark struct. Arguments are as in the command-line options.
 
 ```c
-int pngspark_append(struct pngspark *ps, double, value);
+int pngspark_append(struct pngspark *ps, double value);
 ```
 Append a value to the pngspark.
 
