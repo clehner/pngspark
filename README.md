@@ -1,6 +1,8 @@
 # pngspark
 ### [Sparklines](https://github.com/holman/spark) as PNGs
 
+![histogram](https://cloud.githubusercontent.com/assets/95347/6131872/f78ab708-b11c-11e4-9ae2-fd6cd0ec2b76.png)
+
 ## Install
 ```
 make
