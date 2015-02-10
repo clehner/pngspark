@@ -29,6 +29,12 @@ curl -s https://api.bitcoinaverage.com/history/USD/per_minute_24h_sliding_window
 ```
 ![btc](https://cloud.githubusercontent.com/assets/95347/6131571/ed7005c2-b11a-11e4-837c-58b07cd5a9c3.png)
 
+Show a sine wave
+```sh
+seq 1 720 | awk '{print sin($1/30)}' | ./pngspark -o sine.png -h 30 -c 33c011
+```
+![sine](https://cloud.githubusercontent.com/assets/95347/6132308/b42da1d4-b11f-11e4-9748-5b61febd9df9.png)
+
 ## API
 
 ```c

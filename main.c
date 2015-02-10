@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	struct pngspark ps;
 	const char *color = "#000000";
 	const char *filename = NULL;
-	double scaling = 0.8;
+	double scaling = 1;
 	int height = 80;
 
 	for (int i = 1; i < argc; i++) {
