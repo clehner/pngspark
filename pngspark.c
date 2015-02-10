@@ -1,6 +1,7 @@
+#include <values.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include <unistd.h>
 
 #include "lupng.h"
@@ -17,7 +18,8 @@ uint32_t parse_color(const char *color_str)
 		((color >> 16) | (color & 0x00ff00) | (color & 0xff) << 16);
 }
 
-int pngspark_init(struct pngspark *ps, size_t height, const char *color)
+int pngspark_init(struct pngspark *ps, size_t height, const char *color,
+		double scaling)
 {
 	ps->size = initial_size;
 	ps->num_values = 0;
@@ -26,6 +28,8 @@ int pngspark_init(struct pngspark *ps, size_t height, const char *color)
 	ps->color = parse_color(color);
 	ps->height = height;
 	ps->max_value = 0;
+	ps->min_value = DBL_MAX;
+	ps->scaling = scaling;
 	return 0;
 }
 
@@ -39,6 +43,8 @@ int pngspark_append(struct pngspark *ps, double value)
 	ps->values[i] = value;
 	if (value > ps->max_value)
 		ps->max_value = value;
+	if (value < ps->min_value)
+		ps->min_value = value;
 	return 0;
 }
 
@@ -58,10 +64,11 @@ int pngspark_write(struct pngspark *ps, FILE *file)
 	double *values = ps->values;
 	uint32_t *pixels = (uint32_t *)img->data;
 	uint32_t color = ps->color;
-	double height_scale = (double)height / (double)ps->max_value;
+	ps->min_value *= ps->scaling;
+	double height_scale = (double)height / (ps->max_value - ps->min_value);
 
 	for (size_t x = 0; x < width; x++) {
-		size_t value = height - (values[x] * height_scale);
+		size_t value = height - ((values[x] - ps->min_value) * height_scale);
 		for (size_t y = 0; y < value; y++)
 			pixels[x + width * y] = 0;
 		for (size_t y = value; y < height; y++)

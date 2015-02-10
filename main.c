@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 	struct pngspark ps;
 	const char *color = "#000000";
 	const char *filename = "pngspark.png";
+	double scaling = 0.8;
 	int height = 10;
 
 	for (int i = 1; i < argc; i++) {
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
 		if (argv[i][1] == '-') {
 			if (!strcmp("help", argv[i]+2)) {
 				errx(1, "Usage: %s [--help] [-h height] "
-						"[-o output.png] [-c color]", argv[0]);
+						"[-o output.png] [-c color] [-s scale_min]", argv[0]);
 			}
 		} else if (!argv[i][2]) switch (argv[i][1]) {
 			case 'c':
@@ -38,13 +39,16 @@ int main(int argc, char *argv[])
 			case 'h':
 				if (++i < argc) height = atoi(argv[i]);
 				break;
+			case 's':
+				if (++i < argc) scaling = atof(argv[i]);
+				break;
 		}
 	}
 
 	FILE *file = fopen(filename, "w");
 	if (!file) err(1, "unable to open file %s", filename);
 
-	if (pngspark_init(&ps, height, color) < 0)
+	if (pngspark_init(&ps, height, color, scaling) < 0)
 		return 1;
 
 	char c;
