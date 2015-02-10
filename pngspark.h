@@ -8,7 +8,7 @@ struct pngspark {
 	size_t size;
 	size_t max_value;
 	size_t height;
-	uint8_t color;
+	uint32_t color;
 	double *values;
 };
 
