@@ -16,39 +16,35 @@ char float_chars[(unsigned char)-1] = {
 
 int main(int argc, char *argv[])
 {
-	if (isatty(fileno(stdin)) && (argc < 2 ||
-				!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
-		return 1;
-	}
-
 	struct pngspark ps;
 	const char *color = "#000000";
 	const char *filename = "pngspark.png";
 	int height = 10;
 
 	for (int i = 1; i < argc; i++) {
-		char c = argv[i][1];
-		if(argv[i][0] != '-' || argv[i][2])
-			c = -1;
-		switch(c) {
+		if (argv[i][0] != '-') continue;
+		if (argv[i][1] == '-') {
+			if (strcmp("help", argv[i]+2)) {
+				errx(1, "Usage: %s [--help] [-h height] "
+						"[-o output.png] [-c color]", argv[0]);
+			}
+		} else if (!argv[i][2]) switch (argv[i][1]) {
 			case 'c':
 				if (++i < argc) color = argv[i];
 				break;
-			case 'f':
+			case 'o':
 				if (++i < argc) filename = argv[i];
 				break;
 			case 'h':
 				if (++i < argc) height = atoi(argv[i]);
 				break;
-			default:
-				fprintf(stderr, "Usage: %s [-h|--help] VALUE,...\n", argv[0]);
 		}
 	}
 
-	int fd = open(filename, O_CREAT | O_RDWR, 0644);
-	if (!fd) err(1, "unable to open file %s", filename);
+	FILE *file = fopen(filename, "w");
+	if (!file) err(1, "unable to open file %s", filename);
 
-	if (pngspark_init(&ps, fd, height, color) < 0)
+	if (pngspark_init(&ps, height, color) < 0)
 		return 1;
 
 	char c;
@@ -68,8 +64,14 @@ int main(int argc, char *argv[])
 			return 1;
 	} while (c != EOF);
 
+	if (pngspark_write(&ps, file) < 0)
+		return 1;
+
 	if (pngspark_end(&ps) < 0)
 		return 1;
+
+	if (fclose(file) < 0)
+		err(1, "close %s", filename);
 
 	return 0;
 }
