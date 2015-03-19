@@ -54,8 +54,10 @@ int main(int argc, char *argv[])
 		usage(argv[0]);
 	}
 
+	/* make sure we can access the file before building the png */
 	FILE *file = fopen(filename, "w");
 	if (!file) err(1, "unable to open file %s", filename);
+	if (fclose(file) < 0) err(1, "unable to close file %s", filename);
 
 	if (pngspark_init(&ps, height, color, scaling) < 0)
 		return 1;
@@ -77,13 +79,10 @@ int main(int argc, char *argv[])
 			return 1;
 	} while (c != EOF);
 
-	if (pngspark_write(&ps, file) < 0)
+	if (pngspark_write(&ps, filename) < 0)
 		return 1;
 
 	pngspark_end(&ps);
-
-	if (fclose(file) < 0)
-		err(1, "close %s", filename);
 
 	return 0;
 }

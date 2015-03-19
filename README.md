@@ -58,7 +58,7 @@ int pngspark_append(struct pngspark *ps, double value);
 Append a value to the pngspark.
 
 ```c
-int pngspark_write(struct pngspark *ps, FILE *file);
+int pngspark_write(struct pngspark *ps, const char *filename);
 ```
 Process the values and write as a PNG to a file.
 
